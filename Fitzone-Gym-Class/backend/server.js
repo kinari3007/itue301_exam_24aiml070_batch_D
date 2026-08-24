@@ -8,6 +8,10 @@ const app = express()
 const port = process.env.PORT || 5000
 
 app.use(requestLogger)
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  next()
+})
 app.use(express.json())
 
 app.use('/api/v1/auth', authRoutes)

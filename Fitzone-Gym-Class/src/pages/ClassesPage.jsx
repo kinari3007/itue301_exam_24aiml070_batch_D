@@ -1,29 +1,61 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import TrainerCard from '../components/TrainerCard'
 
-const trainers = [
-  {
-    name: 'Rahul Sharma',
-    specialization: 'Strength Training',
-    available: true,
-  },
-  {
-    name: 'Priya Mehta',
-    specialization: 'Yoga and Mobility',
-    available: false,
-  },
-]
+const trainersApiUrl = 'http://localhost:5000/api/v1/trainers'
 
 function ClassesPage() {
-  const [selectedTrainer, setSelectedTrainer] = useState(trainers[0].name)
+  const [trainers, setTrainers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedTrainer, setSelectedTrainer] = useState('')
   const [selectedClassName, setSelectedClassName] = useState('Strength Basics')
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('Morning')
+
+  useEffect(() => {
+    async function loadTrainers() {
+      try {
+        const response = await fetch(trainersApiUrl)
+
+        if (!response.ok) {
+          throw new Error('Trainer request failed')
+        }
+
+        const trainerData = await response.json()
+        setTrainers(trainerData)
+        setSelectedTrainer(trainerData[0]?.name ?? '')
+      } catch {
+        setError('Failed to load trainers.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadTrainers()
+  }, [])
+
+  const filteredTrainers = trainers.filter((trainer) =>
+    trainer.specialization.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
 
   return (
     <section className="page-section">
       <h2>Gym Classes</h2>
       <p>Explore FitZone classes and meet our trainers.</p>
+      {loading && <p>Loading trainers...</p>}
+      {error && <p role="alert">{error}</p>}
+      {!loading && !error && (
+        <label className="trainer-search">
+          Search by specialization
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="e.g. strength"
+          />
+        </label>
+      )}
       <form className="booking-form">
         <label>
           Trainer
@@ -71,9 +103,11 @@ function ClassesPage() {
         {' '}Time: {selectedTimeSlot}
       </p>
       <div className="trainer-list">
-        {trainers.map((trainer) => (
+        {!loading &&
+          !error &&
+          filteredTrainers.map((trainer) => (
           <TrainerCard key={trainer.name} {...trainer} />
-        ))}
+          ))}
       </div>
     </section>
   )

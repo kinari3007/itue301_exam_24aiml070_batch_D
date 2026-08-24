@@ -1,0 +1,83 @@
+.app-shell {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: 48px 24px;
+  box-sizing: border-box;
+}
+
+.app-header {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+
+.eyebrow {
+  margin-bottom: 8px;
+  color: var(--accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.app-header h1 {
+  margin: 0;
+}
+
+.page-section {
+  margin-bottom: 28px;
+  padding: 24px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: left;
+}
+
+.page-section h2 {
+  margin-top: 0;
+}
+
+.trainer-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.trainer-card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+
+.trainer-card h3 {
+  margin: 0 0 10px;
+  color: var(--text-h);
+  font-size: 18px;
+}
+
+.trainer-card p + p {
+  margin-top: 8px;
+}
+
+.trainer-status {
+  font-weight: 700;
+}
+
+.available {
+  color: var(--available);
+}
+
+.fully-booked {
+  color: var(--booked);
+}
+
+@media (max-width: 600px) {
+  .app-shell {
+    padding: 28px 16px;
+  }
+
+  .page-section {
+    padding: 18px;
+  }
+}
